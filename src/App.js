@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from "./components/Navbar";
 import NotesList from './components/NotesList';
 import NotFound from './components/NotFound';
+import NoteDetails from './components/NoteDetails';
 
 import {
   BrowserRouter,
@@ -21,9 +22,10 @@ function App() {
         <Navbar/>
         <div>
             <Routes>
-              <Route path="/" element={<NotesList />} />
-              <Route path="/add" element={<AddNote />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/" element={ <NotesList />} />
+              <Route path="/add" element={ <AddNote />} />
+              <Route path="/notes/:id" element={ <NoteDetails />} />
+              <Route path="*" element={ <NotFound />} />
             </Routes>
         </div>
       </div>
