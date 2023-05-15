@@ -24,6 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={ <NotesList />} />
               <Route path="/add" element={ <AddNote />} />
+              <Route path="/notes/edit/:id" element ={ <AddNote />}/>
               <Route path="/notes/:id" element={ <NoteDetails />} />
               <Route path="*" element={ <NotFound />} />
             </Routes>

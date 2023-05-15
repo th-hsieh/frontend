@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useState,useEffect } from "react";
+import { useNavigate,useParams } from 'react-router-dom';
 import NotesService from "../services/NotesService";
 
 /* use useNavigate() instead of useHistory() */
@@ -9,24 +9,57 @@ const AddNote = () => {
     const[body,setBody] = useState('');
     const[category,setCategory] = useState('programming');//initial value
     const history = useNavigate();
-    
+    const {id} = useParams();
+
     const saveNote = (e) => {
         e.preventDefault();
-        const note = {title,body,category};
+        const note = {title,body,category, id};
         //console.log("printing note",note);
-        NotesService.create(note)
-                    .then(response=>{
-                        console.log("Note added sucessfully",response.data);
-                        //history('/');
-                        history("/");
-                    })
-                    .catch(error => {
-                        console.log('something went wrong',error);
-                    })
+
+        if(id){
+            //if ID exists, then we call the service update method
+            NotesService.update(note)
+                        .then(response => {
+                            console.log("Note updated sucessfully",response.data);
+                            history("/");
+                        })
+                        .catch(error =>{
+                            console.log("Something went wrong", error);
+                        })
+        }else{
+            //call thhe service create method
+            NotesService.create(note)
+                        .then(response=>{
+                            console.log("Note added sucessfully",response.data);
+                            history("/");
+                         })
+                         .catch(error => {
+                            console.log('something went wrong',error);
+                         })
+        }
+        
     }
+
+    useEffect(()=>{
+        if (id){
+            NotesService.get(id)
+                        .then(note => {
+                            setTitle(note.data.title);
+                            setBody(note.data.body);
+                            setCategory(note.data.category);
+                        })
+                        .catch(error=>{
+                            console.log("Something went wrong", error)
+                        })
+        }
+    }, [])
     
     return ( 
         <div className="create">
+            <div className="text-center">
+                <h5>{id ? "Update a Note": "Add a New Note"}</h5>
+            </div>
+
             <form>
                 <div className="form-group">
                     <label htmlFor="title">Note Title: <sup>*</sup></label>
@@ -57,7 +90,7 @@ const AddNote = () => {
                         className="form-control"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        >
+                    >
                         <option value="programming">Programming</option>
                         <option value="vacation">Vacation</option>
                         <option value="meeting">Meeting</option>
@@ -65,7 +98,7 @@ const AddNote = () => {
                     </select> 
                 </div>
                 <div className="text-center">
-                    <button onClick={(e) => saveNote(e)}>Add Note</button>
+                    <button onClick={(e) => saveNote(e)} > {id ? "Update A Note": "Add Note"} </button>
                 </div>
             </form>
         </div>
