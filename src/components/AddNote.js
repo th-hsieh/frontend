@@ -8,11 +8,18 @@ const AddNote = () => {
     const[title,setTitle] = useState('');
     const[body,setBody] = useState('');
     const[category,setCategory] = useState('programming');//initial value
+    const[errors,setErrors] = useState(false);
     const history = useNavigate();
     const {id} = useParams();
 
     const saveNote = (e) => {
         e.preventDefault();
+
+        if(!title || !body){
+            setErrors(true);
+            return ;
+        }
+
         const note = {title,body,category, id};
         //console.log("printing note",note);
 
@@ -58,6 +65,7 @@ const AddNote = () => {
         <div className="create">
             <div className="text-center">
                 <h5>{id ? "Update a Note": "Add a New Note"}</h5>
+                 {errors &&  <span style={{color:'red',fontStyle:'italic'}} > Please enter the mandatory fields </span> }
             </div>
 
             <form>
